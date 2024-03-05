@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="./reset.css" rel="stylesheet" type="text/css">
+    <link href="./style.css" rel="stylesheet" type="text/css">
+    <title>reactHW</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      function Header() {
+        return (
+          <header>
+            <h1>구구단</h1>
+          </header>
+        );
+      }
+
+      function renderGugudanList(block, inputValue) {
+        const gop = [...new Array(9)].map((_, i) => i + 1);
+
+        switch (block) {
+          case true:
+            return gop.map((item, index) => {
+              return (
+                <ul className="gugudanlist" key={index}>
+                  <Gugudan dan={inputValue} gop={item} />
+                </ul>
+              );
+            });
+          case false:
+            return null;
+        }
+      }
+
+      function Gugudan(props) {
+        const { dan, gop } = props;
+        return (
+          <li>
+            {dan} * {gop} = {dan * gop}
+          </li>
+        );
+      }
+
+      function GugudanInput(props) {
+        const { setBlock, setInputValue } = props;
+
+        return (
+          <div className="gugudanInput">
+            <input type="text" autoFocus placeholder="구구단을 외자" />
+            <button
+              type="button"
+              onClick={(e) => {
+                const input = document.querySelector("input");
+
+                if (input.value === "") {
+                  alert("값을 입력해 주세요.");
+                  input.value = ""; // Input 값 비우기
+                } else if (+input.value === 0) {
+                  alert("0을 제외한 수를 입력해 주세요.");
+                  input.value = "";
+                } else if (!isNaN(input.value)) {
+                  setBlock(true);
+                  setInputValue(input.value);
+                } else if (typeof input.value === "string") {
+                  alert("숫자를 입력해 주세요.");
+                  input.value = "";
+                }
+              }}
+            >
+              뿅
+            </button>
+          </div>
+        );
+      }
+
+      function App() {
+        const [block, setBlock] = React.useState(false);
+        const [inputValue, setInputValue] = React.useState(0);
+
+        return (
+          <div id="gugudan">
+            <Header />
+            <div className="main">
+              <GugudanInput setBlock={setBlock} setInputValue={setInputValue} />
+              {renderGugudanList(block, inputValue)}
+            </div>
+          </div>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>
